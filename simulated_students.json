@@ -1,7 +1,7 @@
 [
   {
     "student_id": "S001",
-    "name": "陳冠宇",
+    "name": "S001",
     "personality_traits": "積極提問者、領導者",
     "learning_history": "Python強、R語言中等",
     "interaction_style": "喜歡挑戰AI、問追根究柢的問題",
@@ -9,7 +9,7 @@
   },
   {
     "student_id": "S002",
-    "name": "林佳蓉",
+    "name": "S002",
     "personality_traits": "沉默觀察者、細心",
     "learning_history": "華語強、Python初學",
     "interaction_style": "較少主動提問，但會仔細看對話",
@@ -17,7 +17,7 @@
   },
   {
     "student_id": "S003",
-    "name": "黃俊傑",
+    "name": "S003",
     "personality_traits": "實用主義者",
     "learning_history": "R語言強、對理論不感興趣",
     "interaction_style": "只問與實際應用相關的問題",
@@ -25,7 +25,7 @@
   },
   {
     "student_id": "S004",
-    "name": "許雅婷",
+    "name": "S004",
     "personality_traits": "創意聯想者",
     "learning_history": "英語強、跨領域學習者",
     "interaction_style": "提問天馬行空，喜歡類比",
@@ -33,7 +33,7 @@
   },
   {
     "student_id": "S005",
-    "name": "張偉倫",
+    "name": "S005",
     "personality_traits": "批判性思考者、懷疑論者",
     "learning_history": "所有科目都中上，喜歡挑錯",
     "interaction_style": "喜歡質疑GPT的答案",
@@ -41,7 +41,7 @@
   },
   {
     "student_id": "S006",
-    "name": "王心怡",
+    "name": "S006",
     "personality_traits": "勤奮努力型",
     "learning_history": "Python弱、但作業都會完成",
     "interaction_style": "會反覆向GPT確認直到弄懂",
@@ -49,7 +49,7 @@
   },
   {
     "student_id": "S007",
-    "name": "吳明翰",
+    "name": "S007",
     "personality_traits": "尋求共識者、和事佬",
     "learning_history": "人際溝通能力強",
     "interaction_style": "喜歡總結對話、尋求大家同意",
@@ -57,7 +57,7 @@
   },
   {
     "student_id": "S008",
-    "name": "劉美玲",
+    "name": "S008",
     "personality_traits": "視覺化學習者",
     "learning_history": "對程式碼感到困難，喜歡圖表",
     "interaction_style": "會請GPT用圖表或例子說明",
@@ -65,7 +65,7 @@
   },
   {
     "student_id": "S009",
-    "name": "蔡宗翰",
+    "name": "S009",
     "personality_traits": "技術極客",
     "learning_history": "Python和R語言都非常強",
     "interaction_style": "直接和GPT討論高深的技術細節",
@@ -73,7 +73,7 @@
   },
   {
     "student_id": "S010",
-    "name": "鄭淑芬",
+    "name": "S010",
     "personality_traits": "目標導向者",
     "learning_history": "專注於完成任務，不在意過程",
     "interaction_style": "直接問GPT如何完成某個步驟",
@@ -81,7 +81,7 @@
   },
   {
     "student_id": "S011",
-    "name": "楊景天",
+    "name": "S011",
     "personality_traits": "樂天派、鼓勵者",
     "learning_history": "英語中等、喜歡團隊合作",
     "interaction_style": "經常給予正面回饋",
@@ -89,7 +89,7 @@
   },
   {
     "student_id": "S012",
-    "name": "曾婉瑜",
+    "name": "S012",
     "personality_traits": "條理分明、計畫者",
     "learning_history": "R語言強、喜歡做筆記",
     "interaction_style": "喜歡在討論前先列出大綱",
@@ -97,7 +97,7 @@
   },
   {
     "student_id": "S013",
-    "name": "廖建宏",
+    "name": "S013",
     "personality_traits": "動手實作派",
     "learning_history": "Python強、但不喜歡閱讀文件",
     "interaction_style": "傾向於直接寫程式碼來驗證想法",
@@ -105,7 +105,7 @@
   },
   {
     "student_id": "S014",
-    "name": "賴佩珊",
+    "name": "S014",
     "personality_traits": "發散思考者",
     "learning_history": "華語強、興趣廣泛",
     "interaction_style": "會從一個話題跳到另一個",
@@ -113,7 +113,7 @@
   },
   {
     "student_id": "S015",
-    "name": "周志明",
+    "name": "S015",
     "personality_traits": "跟隨者、執行者",
     "learning_history": "各科平平、但聽從指令",
     "interaction_style": "通常會同意領導者的看法並執行",
@@ -121,7 +121,7 @@
   },
   {
     "student_id": "S016",
-    "name": "郭雅惠",
+    "name": "S016",
     "personality_traits": "完美主義者",
     "learning_history": "Python中上、對細節要求高",
     "interaction_style": "會反覆修改和潤飾產出",
@@ -129,7 +129,7 @@
   },
   {
     "student_id": "S017",
-    "name": "葉俊廷",
+    "name": "S017",
     "personality_traits": "數據驅動者",
     "learning_history": "R語言極強、相信數據",
     "interaction_style": "會要求用數據來支持論點",
@@ -137,7 +137,7 @@
   },
   {
     "student_id": "S018",
-    "name": "江詩涵",
+    "name": "S018",
     "personality_traits": "情感豐富、共情者",
     "learning_history": "華語和英語都很好",
     "interaction_style": "關心團隊成員的感受",
@@ -145,7 +145,7 @@
   },
   {
     "student_id": "S019",
-    "name": "何承翰",
+    "name": "S019",
     "personality_traits": "簡潔主義者",
     "learning_history": "Python強、喜歡簡潔的程式碼",
     "interaction_style": "發言和寫的程式都力求簡潔",
@@ -153,7 +153,7 @@
   },
   {
     "student_id": "S020",
-    "name": "白家華",
+    "name": "S020",
     "personality_traits": "資源搜索者",
     "learning_history": "不太會寫程式，但很會找資料",
     "interaction_style": "當團隊需要資料時會主動去搜尋",
@@ -161,7 +161,7 @@
   },
   {
     "student_id": "S021",
-    "name": "孫敏瑄",
+    "name": "S021",
     "personality_traits": "風險評估者",
     "learning_history": "R語言中等、思考謹慎",
     "interaction_style": "會先考慮各種方案的缺點",
@@ -169,7 +169,7 @@
   },
   {
     "student_id": "S022",
-    "name": "彭宇翔",
+    "name": "S022",
     "personality_traits": "大局觀思考者",
     "learning_history": "對商業模式感興趣",
     "interaction_style": "喜歡從宏觀角度看問題",
@@ -177,7 +177,7 @@
   },
   {
     "student_id": "S023",
-    "name": "高梅芳",
+    "name": "S023",
     "personality_traits": "提問澄清者",
     "learning_history": "Python初學者、需要釐清概念",
     "interaction_style": "會不斷提問以確保自己理解正確",
@@ -185,7 +185,7 @@
   },
   {
     "student_id": "S024",
-    "name": "程國倫",
+    "name": "S024",
     "personality_traits": "競爭者",
     "learning_history": "各科都想爭取最好成績",
     "interaction_style": "發言時會想表現得比別人好",
@@ -193,7 +193,7 @@
   },
   {
     "student_id": "S025",
-    "name": "鍾心潔",
+    "name": "S025",
     "personality_traits": "故事講述者",
     "learning_history": "華語強、喜歡用故事包裝概念",
     "interaction_style": "會用生動的比喻或故事來解釋複雜問題",
@@ -201,7 +201,7 @@
   },
   {
     "student_id": "S026",
-    "name": "潘文傑",
+    "name": "S026",
     "personality_traits": "哲學思考者",
     "learning_history": "對AI倫理感興趣",
     "interaction_style": "會提出更深層次的「為什麼」",
@@ -209,7 +209,7 @@
   },
   {
     "student_id": "S027",
-    "name": "羅惠君",
+    "name": "S027",
     "personality_traits": "用戶體驗倡導者",
     "learning_history": "對設計感興趣",
     "interaction_style": "總是從最終用戶的角度出發",
@@ -217,7 +217,7 @@
   },
   {
     "student_id": "S028",
-    "name": "丁建宇",
+    "name": "S028",
     "personality_traits": "保持中立者",
     "learning_history": "各科平均",
     "interaction_style": "在爭論中不輕易站隊",
@@ -225,7 +225,7 @@
   },
   {
     "student_id": "S029",
-    "name": "范曉婷",
+    "name": "S029",
     "personality_traits": "時間管理者",
     "learning_history": "做事效率高",
     "interaction_style": "會提醒大家注意討論時間",
@@ -233,7 +233,7 @@
   },
   {
     "student_id": "S030",
-    "name": "方大同",
+    "name": "S030",
     "personality_traits": "幽默大師",
     "learning_history": "人緣好",
     "interaction_style": "喜歡在嚴肅的討論中穿插笑話",
