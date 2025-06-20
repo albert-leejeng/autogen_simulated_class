@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Uedu 虛擬教室 v2.7 · AutoGen v0.4 (Async Hang Fix)
+Uedu 虛擬教室 v2.9 · AutoGen v0.4 (Definitive Async Fix)
 ====================================================
-• [修正] 解決討論結束後程式卡住，需手動按 Ctrl+C 的問題
-• [架構] 將「執行討論」與「處理結果」分離，使流程更穩定
+• [根本修正] 移除 TerminatedException，完全依賴 StopMessage 來優雅地終止討論，解決程式卡住問題
+• [恢復] 使用 async for 迴圈實現訊息的即時顯示與儲存
+• [優化] 資料庫儲存日誌明確標示目標表格
 """
 
 from __future__ import annotations
@@ -62,7 +63,7 @@ async def setup_classroom_db(recreate: bool = False) -> None:
             if recreate: await cur.execute(f"DROP TABLE IF EXISTS {tbl}")
             await cur.execute(f"CREATE TABLE IF NOT EXISTS {tbl} ({cols}) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
     await conn.ensure_closed()
-    print("✅ MySQL schema ready (v2.7)")
+    print("✅ MySQL schema ready (v2.9)")
 
 # ------------------------------------------------------------------------------
 # 資料庫操作函式 (DAO)
@@ -73,25 +74,25 @@ async def save_message(group_id: int, sender: str, content: str) -> None:
     try:
         async with pool.acquire() as conn, conn.cursor() as cur:
             await cur.execute("INSERT INTO messages (group_id, sender, content) VALUES (%s, %s, %s)", (group_id, sender, content))
-        print(f"✔️  DB: 訊息來自 '{sender}' 已儲存到 group_id {group_id}")
+        # print(f"✔️  DB: 訊息來自 '{sender}' 已儲存到 'messages' 表格 (group_id: {group_id})")
     except Exception as e:
-        print(f"❌ DB: 儲存訊息失敗 (group_id {group_id}, sender {sender}): {e}")
+        print(f"❌ DB: 儲存訊息失敗: {e}")
 
 async def save_teacher_comment(group_id: int, teacher_name: str, comment: str) -> None:
     pool = await _ensure_pool()
     try:
         async with pool.acquire() as conn, conn.cursor() as cur:
             await cur.execute("INSERT INTO teacher_comments (group_id, teacher_name, comment) VALUES (%s, %s, %s)", (group_id, teacher_name, comment))
-        print(f"✔️  DB: 老師對 group_id {group_id} 的評論已儲存")
+        print(f"✔️  DB: 老師對 group_id {group_id} 的評論已儲存到 'teacher_comments' 表格")
     except Exception as e:
-        print(f"❌ DB: 儲存老師評論失敗 (group_id {group_id}): {e}")
+        print(f"❌ DB: 儲存老師評論失敗: {e}")
 
 async def save_final_evaluation(content: str) -> None:
     pool = await _ensure_pool()
     try:
         async with pool.acquire() as conn, conn.cursor() as cur:
             await cur.execute("INSERT INTO final_evaluations (content) VALUES (%s)", (content,))
-        print("✔️  DB: 最終教案評估已儲存")
+        print("✔️  DB: 最終教案評估已儲存到 'final_evaluations' 表格")
     except Exception as e:
         print(f"❌ DB: 儲存最終教案評估失敗: {e}")
 
@@ -141,8 +142,7 @@ class ConsensusTermination(TerminationCondition):
         self._message_count += 1
         
         last_speaker = messages[-1].source
-        if last_speaker in self.all_members:
-            self.speakers.add(last_speaker)
+        if last_speaker in self.all_members: self.speakers.add(last_speaker)
 
         if len(self.speakers) < len(self.all_members): return None
         if self._message_count % self.check_interval != 0: return None
@@ -152,9 +152,7 @@ class ConsensusTermination(TerminationCondition):
         prompt = f"""
         你的任務是判斷一個討論小組是否已達成最終共識。請基於以下對話紀錄，嚴格判斷：
         討論是否已經收斂，並且最近的發言沒有提出任何新的、需要進一步討論的觀點或反對意見？
-
-        如果結論已經形成且無新觀點，請只回答「是」。
-        如果討論仍在發散或有人提出新想法/疑慮，請只回答「否」。
+        如果結論已經形成且無新觀點，請只回答「是」。如果討論仍在發散或有人提出新想法/疑慮，請只回答「否」。
         對話記錄：\n{conversation_text}"""
         
         try:
@@ -166,6 +164,7 @@ class ConsensusTermination(TerminationCondition):
             if "是" in response_text:
                 print("[共識檢查] 偵測到共識，將返回 StopMessage 以結束本組討論。")
                 self._terminated = True
+                # [修正] 只返回 StopMessage，不再拋出異常
                 return StopMessage(content="Consensus reached.", source="ConsensusTermination")
         except Exception as e:
             print(f"[共識檢查] 錯誤: {e}")
@@ -202,26 +201,22 @@ async def sequential_group_discussion(students: List[AssistantAgent], task: str)
         consensus_checker = ConsensusTermination(model_client=model_client, members=members, check_interval=3)
         chat = RoundRobinGroupChat(members, termination_condition=consensus_checker)
         
-        # [修正] 先一次性執行完 run_stream 並收集所有事件，再進行處理
-        try:
-            group_messages = [event async for event in chat.run_stream(task=f"這是 {group_name} 的內部討論。任務：{task}")]
-        except Exception as e:
-            print(f"[討論異常] {group_name} 發生嚴重錯誤: {e}")
-            group_messages = []
-
-        print(f"\n-- {group_name} 討論結束 --")
-
-        # [修正] 遍歷已結束的討論結果，進行儲存與顯示
-        for event in group_messages:
+        group_messages = []
+        # [修正] 移除 try...except 區塊，讓 async for 正常處理 StopMessage
+        async for event in chat.run_stream(task=f"這是 {group_name} 的內部討論。任務：{task}"):
             if isinstance(event, BaseChatMessage):
+                group_messages.append(event)
                 sender, content = event.source or "Unknown", event.to_text()
+                # 即時處理：儲存與顯示
                 await save_message(group_id, sender, content)
                 snippet = content.replace('\n', ' ')[:80]
                 print(f"{sender:>15}: {snippet}")
-        
+
+        print(f"\n-- {group_name} 討論結束 --")
+
         if not group_messages: continue
 
-        transcript = "\n".join(f"- {m.source}: {m.to_text()}" for m in group_messages if isinstance(m, BaseChatMessage))
+        transcript = "\n".join(f"- {m.source}: {m.to_text()}" for m in group_messages)
         teacher_prompt = f"我是老師。請檢視「{group_name}」的討論紀錄，並給出評論。\n\n任務：{task}\n\n紀錄：\n{transcript}\n\n你的評論："
 
         print(f"\n[老師評論] 正在生成對 {group_name} 的評論...")
