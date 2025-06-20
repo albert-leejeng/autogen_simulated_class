@@ -63,7 +63,7 @@ async def setup_classroom_db(recreate: bool = False) -> None:
             if recreate: await cur.execute(f"DROP TABLE IF EXISTS {tbl}")
             await cur.execute(f"CREATE TABLE IF NOT EXISTS {tbl} ({cols}) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
     await conn.ensure_closed()
-    print("✅ MySQL schema ready (v2.9)")
+    print("✅ MySQL schema ready")
 
 # ------------------------------------------------------------------------------
 # 資料庫操作函式 (DAO)
@@ -74,7 +74,7 @@ async def save_message(group_id: int, sender: str, content: str) -> None:
     try:
         async with pool.acquire() as conn, conn.cursor() as cur:
             await cur.execute("INSERT INTO messages (group_id, sender, content) VALUES (%s, %s, %s)", (group_id, sender, content))
-        # print(f"✔️  DB: 訊息來自 '{sender}' 已儲存到 'messages' 表格 (group_id: {group_id})")
+        #print(f"✔️  DB: 訊息來自 '{sender}' 已儲存到 'messages' 表格 (group_id: {group_id})")
     except Exception as e:
         print(f"❌ DB: 儲存訊息失敗: {e}")
 
@@ -120,7 +120,7 @@ def _load_json(file: str, default: Any) -> Any:
     return json.load(fp.open("r", encoding="utf-8")) if fp.exists() else default
 
 class ConsensusTermination(TerminationCondition):
-    def __init__(self, model_client: OpenAIChatCompletionClient, members: List[AssistantAgent], check_interval: int = 3):
+    def __init__(self, model_client: OpenAIChatCompletionClient, members: List[AssistantAgent], check_interval: int = 3): #這裡可以改變檢查間隔
         self.model_client = model_client
         self.check_interval = check_interval
         self.all_members = {agent.name for agent in members}
@@ -144,11 +144,11 @@ class ConsensusTermination(TerminationCondition):
         last_speaker = messages[-1].source
         if last_speaker in self.all_members: self.speakers.add(last_speaker)
 
-        if len(self.speakers) < len(self.all_members): return None
-        if self._message_count % self.check_interval != 0: return None
+        if len(self.speakers) < len(self.all_members): return None #至少要等所有人發言
+        if self._message_count % self.check_interval != 0: return None #至少要等到檢查間隔
 
         print(f"\n[共識檢查] 全員已發言，正在分析最近 {self.check_interval} 則訊息...")
-        conversation_text = "\n".join(f"- {msg.source}: {msg.to_text()}" for msg in messages[-self.check_interval:])
+        conversation_text = "\n".join(f"- {msg.source}: {msg.to_text()}" for msg in messages[-self.check_interval:]) # 只分析最近的訊息
         prompt = f"""
         你的任務是判斷一個討論小組是否已達成最終共識。請基於以下對話紀錄，嚴格判斷：
         討論是否已經收斂，並且最近的發言沒有提出任何新的、需要進一步討論的觀點或反對意見？
@@ -191,7 +191,7 @@ def create_student_agents(students: List[Dict[str, Any]]) -> List[AssistantAgent
 async def sequential_group_discussion(students: List[AssistantAgent], task: str) -> None:
     if not students: return
 
-    groups, all_teacher_comments = [students[i:i+6] for i in range(0, len(students), 6)], []
+    groups, all_teacher_comments = [students[i:i+6] for i in range(0, len(students), 6)], [] # 每組最多6人，可以根據需要調整
 
     for idx, members in enumerate(groups, 1):
         group_name = f"Group{idx}"
